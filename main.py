@@ -38,21 +38,16 @@ def get_stock_tickers():
 
         # Create list in dict for each key (large/mid/small cap) to save stock tickers in
         tickers[key] = []
-        white = " "
+
         # Loop through each element
-        for a in texta:
+        for string in texta:
             try:
                 # Regex search to get the stock tic for each element in the soup object,
+                tickers[key].append(re.search('symbol=(.*?)&amp', str(string.renderContents())).group(1))
 
-                tickers[key].append(re.search('symbol=(.*?)&amp', str(a.renderContents())).group(1))
-                # Remove stock tickers trailing A/B/C/D postfix
-                # .split(white, 1)[0])
 
             except:
                 continue
-
-        # Remove duplicate entries
-    # tickers = list(dict.fromkeys(tickers))
 
     return tickers
 
