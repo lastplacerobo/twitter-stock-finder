@@ -115,7 +115,31 @@ def compare_words_to_tickers(tweets):
     with open("tickers.json", "r") as f:
         file_tickers = json.load(f)
 
-    print(file_tickers)
+        ticker_list = []
+
+        # Convert dict to list
+        for i in file_tickers.keys():
+            for value in file_tickers[i]:
+                ticker_list.append(value)
+
+    stock_tweets = {}
+    # Go trough each tweet and compare with stock tickers list
+    for key, value in tweets.items():
+
+        for stockticker in ticker_list:
+
+            if stockticker in value["text"]:
+
+                # Check if key already exist if so, append list
+                if stockticker in stock_tweets:
+                    stock_tweets[stockticker].append(value["text"])
+
+                # Save tweet text as list in stock ticker key
+                else:
+                    stock_tweets[stockticker] = []
+                    stock_tweets[stockticker].append(value["text"])
+
+    return stock_tweets
 
 def graph_stock_tickers():
     """trenda varje stock tickers för att se vad folk pratar om över tid"""
@@ -137,7 +161,7 @@ def main():
 
     tweets = get_tweets(tweet_lang, keyword)
 
-    compare_words_to_tickers(tweets)
+    stock_tweets = compare_words_to_tickers(tweets)
 
 
 # Only run main if executed directly
