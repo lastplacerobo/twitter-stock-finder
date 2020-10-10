@@ -78,12 +78,8 @@ def save_to_json(data):
         json.dump(data, f)
     f.close()
 
-def get_tweets(tweet_lang, keywords, twitter_users):
+def get_tweets(tweet_lang, keywords):
     credentials = yaml.safe_load(open("./credentials.yml"))
-
-    """Sök efter hashtag eller trusted users på twitter, spara tweetsen i json fil
-    Sök ej på nytt om du sparat tweets med det ID:t eller sökt för den datumperioden redan"""
-
 
     try:
         tso = TwitterSearchOrder()  # create a TwitterSearchOrder object
@@ -100,9 +96,6 @@ def get_tweets(tweet_lang, keywords, twitter_users):
         )
 
         # Save all tweets in a nested dic
-        # twitty{"id"}
-        #          |- {date} -> tweet creation date
-        #          |- {text} -> tweet text
         twitty = {}
         for tweet in ts.search_tweets_iterable(tso):
             # Dict based on tweet ID, assign a new dict as value
@@ -118,9 +111,35 @@ def get_tweets(tweet_lang, keywords, twitter_users):
         print(e)
 
 
-def compare_words_to_tickers():
-    """Jämför alla ord i tweetsen mot stock tickers"""
+def compare_words_to_tickers(tweets):
+    with open("tickers.json", "r") as f:
+        file_tickers = json.load(f)
 
+        ticker_list = []
+
+        # Convert dict to list
+        for i in file_tickers.keys():
+            for value in file_tickers[i]:
+                ticker_list.append(value)
+
+    stock_tweets = {}
+    # Go trough each tweet and compare with stock tickers list
+    for key, value in tweets.items():
+
+        for stockticker in ticker_list:
+
+            if stockticker in value["text"]:
+
+                # Check if key already exist if so, append list
+                if stockticker in stock_tweets:
+                    stock_tweets[stockticker].append(value["text"])
+
+                # Save tweet text as list in stock ticker key
+                else:
+                    stock_tweets[stockticker] = []
+                    stock_tweets[stockticker].append(value["text"])
+
+    return stock_tweets
 
 def graph_stock_tickers():
     """trenda varje stock tickers för att se vad folk pratar om över tid"""
@@ -135,6 +154,14 @@ def main():
     elif check_file_exist() is True:
         tickers = get_stock_tickers()
         update_stock_ticker(tickers)
+
+    # all entities in the list must exist in the tweet, so only use one at a time
+    keyword = ["finanstwitter"]
+    tweet_lang = "sv"
+
+    tweets = get_tweets(tweet_lang, keyword)
+
+    stock_tweets = compare_words_to_tickers(tweets)
 
 
 # Only run main if executed directly
