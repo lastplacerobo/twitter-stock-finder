@@ -163,7 +163,7 @@ def main():
 
     stock_tweets = compare_tweets_to_tickers(tweets)
 
-    print(stock_tweets)
+
 
 # Only run main if executed directly
 if __name__ == "__main__":
