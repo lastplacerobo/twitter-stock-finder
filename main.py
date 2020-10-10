@@ -111,7 +111,7 @@ def get_tweets(tweet_lang, keywords):
         print(e)
 
 
-def compare_words_to_tickers(tweets):
+def compare_tweets_to_tickers(tweets):
     with open("tickers.json", "r") as f:
         file_tickers = json.load(f)
 
@@ -161,8 +161,9 @@ def main():
 
     tweets = get_tweets(tweet_lang, keyword)
 
-    stock_tweets = compare_words_to_tickers(tweets)
+    stock_tweets = compare_tweets_to_tickers(tweets)
 
+    print(stock_tweets)
 
 # Only run main if executed directly
 if __name__ == "__main__":
