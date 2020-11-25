@@ -141,10 +141,6 @@ def compare_tweets_to_tickers(tweets):
 
     return stock_tweets
 
-def graph_stock_tickers():
-    """trenda varje stock tickers för att se vad folk pratar om över tid"""
-
-
 def main():
 
     if check_file_exist() is False:
@@ -163,7 +159,9 @@ def main():
 
     stock_tweets = compare_tweets_to_tickers(tweets)
 
-
+    # Print stock ticker and nr of tweets for each ticker
+    for key, value in stock_tweets.items():
+        print(key, ":", (len(value)))
 
 # Only run main if executed directly
 if __name__ == "__main__":
