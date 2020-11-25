@@ -59,6 +59,7 @@ def check_file_exist():
     except FileNotFoundError:
         return False
 
+
 def update_stock_ticker(fresh_tickers):
     with open("tickers.json", "r") as f:
         file_tickers = json.load(f)
@@ -77,6 +78,7 @@ def save_to_json(data):
     with open("tickers.json", "w") as f:
         json.dump(data, f)
     f.close()
+
 
 def get_tweets(tweet_lang, keywords):
     credentials = yaml.safe_load(open("./credentials.yml"))
@@ -141,8 +143,8 @@ def compare_tweets_to_tickers(tweets):
 
     return stock_tweets
 
-def main():
 
+def main():
     if check_file_exist() is False:
         tickers = get_stock_tickers()
         save_to_json(tickers)
@@ -162,6 +164,7 @@ def main():
     # Print stock ticker and nr of tweets for each ticker
     for key, value in stock_tweets.items():
         print(key, ":", (len(value)))
+
 
 # Only run main if executed directly
 if __name__ == "__main__":
